@@ -1,6 +1,9 @@
 import React from "react";
 import "./css/product.css";
 import { useStateValue } from "./context/StateProvider";
+import Noty from "noty";
+import "../../node_modules/noty/lib/noty.css"
+import "../../node_modules/noty/lib/themes/mint.css"
 
 const Product = (props) => {
   const [{ basket }, dispatch] = useStateValue();
@@ -9,6 +12,14 @@ const Product = (props) => {
 
   const addToBasket = () => {
     // dispatch the item into the data layer
+    new Noty({
+      type:"success",
+      layout:"topRight",
+      text:`<div class="noty__container"><img src=${image}> ${title} has been added to basket</div>`,
+      timeout:500,
+    }).show();
+    
+    
     dispatch({
       type: "ADD_TO_BASKET",
       item: {
@@ -40,7 +51,7 @@ const Product = (props) => {
 
       <img src={image} alt="" />
 
-      <button onClick={addToBasket}>Add to Basket</button>
+      <button className="btn3" onClick={addToBasket}>Add to Basket</button>
     </div>
   );
 };

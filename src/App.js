@@ -7,6 +7,7 @@ import Login from "./components/Login";
 import { useEffect } from 'react'
 import { auth } from "./firebase";
 import { useStateValue } from "./components/context/StateProvider";
+import CartOverlay from "./components/CartOverlay";
 
 function App() {
   const [{}, dispatch] = useStateValue();
@@ -35,7 +36,7 @@ function App() {
     <Router>
       <div className="App">
         <Header></Header>
-
+        {/* <CartOverlay/> */}
         <Switch>
           <Route exact path="/">
             <Home></Home>

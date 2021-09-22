@@ -1,0 +1,99 @@
+.cart__overlay{
+    position:fixed;
+    top:0px;
+    right:400px;
+    height:100vh;
+    right:0;
+    background-color: transparent;
+    z-index: 2;
+    visibility: hidden;
+    transition:  right 200ms linear;
+  }
+  
+  .cart{
+    position:fixed;
+    top:60px;
+    right:0;
+    background-color: white;
+    z-index: 2;
+    height:100vh;
+    width:400px;
+    color: black;
+  
+    
+  }
+  .showCart{
+    visibility: visible;
+    right:400px;
+    
+    
+  }
+  
+  .cart__header{
+    padding: 10px;
+    display: flex;
+    align-items: center;
+  }
+  .cart__header h2{
+    flex:1;
+    text-align: center;
+  }
+
+  .cart__body{
+      display:flex;
+      padding: 15px 10px;
+      align-items: flex-start;
+      border-bottom: 1px solid gray;
+  }
+
+  .cart__footer{
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 10px;
+      font-size: 12px;
+      text-transform: capitalize;
+  }
+
+  .cart__body > img{
+      width:75px;
+      object-fit: contain;
+  }
+
+  .cart__body > .cart__info{
+    font-size: 10px;
+    flex: 1;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.cart__info>p{
+     font-size: 12px;
+     padding-top: 10px;
+}
+
+.cart__right > .MuiIconButton-root{
+    padding:0 !important;
+}
+
+  .cart__body > .cart__info > h2{
+    font-size: 10px;
+  
+}
+
+  .cart__body > .cart__info > button , .cart__footer > button{
+    background-color: #f0c14b;
+    border: 1px solid;
+    margin-top: 10px;
+    border-color: #a88734 #9c7e31 #846a29;
+    color:#111;
+   }
+
+  .cart__body > .cart__right{
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-size: 12px;
+      margin-top: -5px;
+  }
