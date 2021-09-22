@@ -3,10 +3,17 @@ import "./css/header.css"
 import SearchIcon from '@mui/icons-material/Search';
 import { ShoppingBasket } from '@mui/icons-material';
 import { Link } from "react-router-dom";
-import { useStateValue } from "./context//StateProvider";
+import { useStateValue } from "./context/StateProvider";
+import { auth } from "../firebase";
 
 const Header = () => {
-    const [{ basket}, dispatch] = useStateValue();
+    const [{ basket,user}, dispatch] = useStateValue();
+
+    const handleAuthenticaton = () => {
+        if (user) {
+          auth.signOut();
+        }
+      }
     return (
         <div className = "header">
             <Link to="/"><img className="header_logo" src="https://pngimg.com/uploads/amazon/amazon_PNG11.png" alt="amazon-logo"></img></Link>
@@ -19,14 +26,18 @@ const Header = () => {
 
 
             <div className="header_nav">
-                <div className="header_option">
-                    <span className="header_option1">Hello Guest</span>
-                    <span className="header_option2">Sign In</span>
-                </div>
-                <div className="header_option">
-                    <span className="header_option1">Returns</span>
-                    <span className="header_option2">& Orders</span>
-                </div>
+                <Link to={!user && '/login'}>
+                    <div onClick={handleAuthenticaton} className="header_option">
+                        <span className="header_option1">Hello {!user ? 'Guest' : user.email}</span>
+                        <span className="header_option2">{user ? 'Sign Out' : 'Sign In'}</span>
+                    </div>
+                </Link>
+                <Link to='/orders'>
+                    <div className="header_option">
+                        <span className="header_option1">Returns</span>
+                        <span className="header_option2">& Orders</span>
+                    </div>
+                </Link>
                 <div className="header_option">
                     <span className="header_option1">Your</span>
                     <span className="header_option2">Prime</span>
