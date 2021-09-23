@@ -7,7 +7,7 @@ import Login from "./components/Login";
 import { useEffect } from 'react'
 import { auth } from "./firebase";
 import { useStateValue } from "./components/context/StateProvider";
-import CartOverlay from "./components/CartOverlay";
+// import CartOverlay from "./components/CartOverlay";
 
 function App() {
   const [{}, dispatch] = useStateValue();

@@ -53,6 +53,10 @@
   box-shadow: rgba(83, 83, 92, 0.25) 0px 30px 60px -12px inset,
     rgba(110, 98, 98, 0.3) 0px 18px 36px -18px inset;
 }
+.btn3:active {
+  transform: scale(0.98);
+  box-shadow: 3px 2px 22px 1px rgba(0, 0, 0, 0.24);
+}
 
 
 .product__price {
@@ -81,7 +85,7 @@
 
 }
 .noty_type__success{
-  background: white !important;
+  background: rgb(231 234 234) !important;
   color:black !important;
 
 }

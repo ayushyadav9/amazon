@@ -8,7 +8,7 @@ import "../../node_modules/noty/lib/themes/mint.css"
 const Product = (props) => {
   const [{ basket }, dispatch] = useStateValue();
   const {id, title, image, price, rating } = props;
-  console.log(basket)
+  // console.log(basket)
 
   const addToBasket = () => {
     // dispatch the item into the data layer
