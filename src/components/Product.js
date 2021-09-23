@@ -4,9 +4,11 @@ import { useStateValue } from "./context/StateProvider";
 import Noty from "noty";
 import "../../node_modules/noty/lib/noty.css"
 import "../../node_modules/noty/lib/themes/mint.css"
+import StarIcon from '@mui/icons-material/Star';
+import { yellow } from '@mui/material/colors';
 
 const Product = (props) => {
-  const [{ basket }, dispatch] = useStateValue();
+  const [, dispatch] = useStateValue();
   const {id, title, image, price, rating } = props;
   // console.log(basket)
 
@@ -37,14 +39,14 @@ const Product = (props) => {
       <div className="product__info">
         <p>{title}</p>
         <p className="product__price">
-          <small>$</small>
+          <small>₹</small>
           <strong>{price}</strong>
         </p>
         <div className="product__rating">
           {Array(rating)
             .fill()
             .map((_, i) => (
-              <p>🌟</p>
+              <p key = {i}><StarIcon sx={{ color: yellow[700] }}></StarIcon></p>
             ))}
         </div>
       </div>

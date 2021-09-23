@@ -4,7 +4,7 @@
   align-items: center;
   justify-content: flex-end;
   margin: 10px;
-  padding: 20px;
+  padding: 3px 16px;
   width: 100%;
   max-height: 400px;
   min-width: 100px;
@@ -36,7 +36,7 @@
 .product > button {
   background: #f0c14b;
   border: 1px solid;
-  margin-top: 10px;
+  margin: 10px;
   border-color: #a88734 #9c7e31 #846a29;
   color: #111;
   border-radius: 5px;

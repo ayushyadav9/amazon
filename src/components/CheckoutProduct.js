@@ -1,9 +1,11 @@
 import React from 'react'
 import './css/checkoutProduct.css'
 import { useStateValue } from "./context/StateProvider";
+import StarIcon from '@mui/icons-material/Star';
+import { yellow } from '@mui/material/colors';
 
 const CheckoutProduct = (props) => {
-    const [{ basket }, dispatch] = useStateValue();
+    const [, dispatch] = useStateValue();
     const {id, title, image, price, rating, hideButton  } = props;
 
 
@@ -28,11 +30,11 @@ const CheckoutProduct = (props) => {
                     {Array(rating)
                     .fill()
                     .map((_, i) => (
-                        <p>🌟</p>
+                        <p key = {i}><StarIcon sx={{ color: yellow[700] }}></StarIcon></p>
                     ))}
                 </div>
                 {!hideButton && (
-                    <button onClick={removeFromBasket}>Remove from Basket</button>
+                    <button className="btn3" onClick={removeFromBasket}>Remove from Basket</button>
                 )}
             </div>
         </div>

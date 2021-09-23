@@ -26,12 +26,13 @@ const Header = () => {
 
 
             <div className="header_nav">
-                <Link to={!user && '/login'}>
+                <Link to='/login'>
                     <div onClick={handleAuthenticaton} className="header_option">
                         <span className="header_option1">Hello {!user ? 'Guest' : user.email}</span>
                         <span className="header_option2">{user ? 'Sign Out' : 'Sign In'}</span>
                     </div>
                 </Link>
+                {/* {!user && '/orders'} */}
                 <Link to='/orders'>
                     <div className="header_option">
                         <span className="header_option1">Returns</span>
