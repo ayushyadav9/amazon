@@ -7,11 +7,12 @@ import CheckoutProduct from "./CheckoutProduct";
 import {  useElements, CardElement, useStripe } from "@stripe/react-stripe-js"
 import CurrencyFormat from "react-currency-format";
 import axios from "../axios";
+import { db } from "../firebase";
 
 
 
 const Payment = () => {
-    const [{ basket,user}] = useStateValue();
+    const [{ basket,user},dispatch] = useStateValue();
 
     const stripe = useStripe();
     const elements = useElements();
@@ -44,9 +45,24 @@ const Payment = () => {
                 card: elements.getElement(CardElement)
             }
         }).then(({ paymentIntent }) => {
+
+            db.collection("users")
+                .doc(user?.uid)
+                .collection("orders")
+                .doc(paymentIntent.id)
+                .set({
+                    basket: basket,
+                    amount: paymentIntent.amount,
+                    created: paymentIntent.created
+                })
+
             setSucceeded(true);
             setError(null);
             setProcessing(false);
+
+            dispatch({
+                type: 'EMPTY_BASKET',
+            })
             history.replace("/orders");
         })
 
@@ -115,7 +131,7 @@ const Payment = () => {
                                     prefix={"₹ "}
                                 />
 
-                                <button type="submit" disabled={processing || disabled | succeeded}>
+                                <button type="submit" disabled={processing || disabled || succeeded}>
                                     <span>
                                         {processing ? <p>Processing</p> : "Buy Now"}
                                     </span>
