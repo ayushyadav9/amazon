@@ -1,44 +1,67 @@
-import React,{ useState } from 'react'
+import React,{ useState,useContext } from 'react'
 import { Link,useHistory  } from "react-router-dom";
 import "./css/login.css"
-import { auth } from "../firebase";
+import orderContext from "./contexts/orderContext"
 
-const Login = () => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+
+const Login = (props) => {
+  const  context = useContext(orderContext)
+  const { setlog,getOrders } = context;
+    const [cred, setcred] = useState({email:"",password:""})
     const history = useHistory();
 
-    const signIn = e => {
+    const onChange = (e)=>{
+        setcred({...cred, [e.target.name]: e.target.value})
+    }
+
+    const signIn = async (e) => {
         e.preventDefault();
         const btn = document.querySelector(".login__signInButton");
         btn.classList.add("button--loading");
-        auth
-            .signInWithEmailAndPassword(email, password)
-            .then(auth => {
-                history.push('/')
-            })
-            .catch((error) => {
-                btn.classList.remove("button--loading");
-                alert(error.message)
-            })
+        const response = await fetch('http://localhost:5000/api/auth/login', {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({email: cred.email,password: cred.password }),
+          });
+          const json = await response.json();
+          if(json.success){
+            localStorage.setItem('token',json.authToken)
+            localStorage.setItem('email',cred.email)
+            getOrders();
+            setlog(true)
+            history.push("/")
+          }
+          else{
+            btn.classList.remove("button--loading");
+            alert("Invalid Credentials")
+            //   props.showAlert("Invalid Credentials","danger")
+          }
     }
 
-    const register = e => {
+    const register = async (e) => {
         e.preventDefault();
         const btn = document.querySelector(".login__registerButton");
         btn.classList.add("button--loading");
-        auth
-            .createUserWithEmailAndPassword(email, password)
-            .then((auth) => {
-                // it successfully created a new user with email and password
-                if (auth) {
-                    history.push('/')
-                }
-            })
-            .catch((error) => {
-                btn.classList.remove("button--loading");
-                alert(error.message)
-            })
+
+        const response = await fetch('http://localhost:5000/api/auth/createUser', {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({email: cred.email,password: cred.password }),
+          });
+          const json = await response.json();
+          console.log(json)
+          if(json.success){
+              localStorage.setItem('token',json.authToken)
+              history.push("/") 
+          }
+          else{
+            btn.classList.remove("button--loading");
+            alert("Invalid Credentials")
+          }
     }
     
     
@@ -53,10 +76,10 @@ const Login = () => {
 
                 <form>
                     <h5>E-mail</h5>
-                    <input type='text' value={email} onChange={e => setEmail(e.target.value)} />
+                    <input type='text' value={cred.email} name="email" onChange={onChange} />
 
                     <h5>Password</h5>
-                    <input type='password' value={password} onChange={e => setPassword(e.target.value)} />
+                    <input type='password' value={cred.password} name="password" onChange={onChange} />
 
                     <button type='submit' onClick={signIn} className='login__signInButton'><span class="button__text">Sign In</span></button>
                 </form>

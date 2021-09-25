@@ -1,21 +1,20 @@
-import React from 'react'
+import React,{useContext} from "react";
 import './css/checkoutProduct.css'
-import { useStateValue } from "./context/StateProvider";
 import StarIcon from '@mui/icons-material/Star';
 import { yellow } from '@mui/material/colors';
+import orderContext from "./contexts/orderContext"
 
 const CheckoutProduct = (props) => {
-    const [, dispatch] = useStateValue();
+    const { deleteOrder,addBOrder } = useContext(orderContext)
     const {id, title, image, price, rating, hideButton  } = props;
 
-
-    const removeFromBasket = () => {
-        // remove the item from the basket
-        dispatch({
-            type: 'REMOVE_FROM_BASKET',
-            id: id,
-        })
+    if(hideButton){
+        addBOrder(title, price, rating, image)
     }
+    const removeFromBasket = () => {
+        deleteOrder(id)
+    }
+    
     return (
         <div className='checkoutProduct'>
             <img className='checkoutProduct__image' src={image} alt=""/>

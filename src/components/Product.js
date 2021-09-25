@@ -1,37 +1,34 @@
-import React from "react";
+import React,{useContext} from "react";
 import "./css/product.css";
-import { useStateValue } from "./context/StateProvider";
 import Noty from "noty";
 import "../../node_modules/noty/lib/noty.css"
 import "../../node_modules/noty/lib/themes/mint.css"
 import StarIcon from '@mui/icons-material/Star';
 import { yellow } from '@mui/material/colors';
+import orderContext from "./contexts/orderContext"
 
 const Product = (props) => {
-  const [, dispatch] = useStateValue();
+  const  context = useContext(orderContext)
+  const { addOrder,log} = context;
+
   const {id, title, image, price, rating } = props;
   // console.log(basket)
 
   const addToBasket = () => {
     // dispatch the item into the data layer
-    new Noty({
-      type:"success",
-      layout:"topRight",
-      text:`<div class="noty__container"><img src=${image}> ${title} has been added to basket</div>`,
-      timeout:500,
-    }).show();
-    
-    
-    dispatch({
-      type: "ADD_TO_BASKET",
-      item: {
-        id: id,
-        title: title,
-        image: image,
-        price: price,
-        rating: rating,
-      },
-    });
+    if(log){
+        new Noty({
+        type:"success",
+        layout:"topRight",
+        text:`<div class="noty__container"><img src=${image}> ${title} has been added to basket</div>`,
+        timeout:500,
+      }).show();
+      
+      addOrder(title, price, rating, image);
+    }
+    else{
+      alert("Login First please")
+    }
   };
 
   return (

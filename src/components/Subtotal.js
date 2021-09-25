@@ -1,21 +1,20 @@
-import React from "react";
+import React,{useContext} from "react";
 import "./css/subtotal.css";
 import CurrencyFormat from "react-currency-format";
-import { useStateValue } from "./context/StateProvider";
-import { getBasketTotal } from "./context/reducer";
+import { getBasketTotal } from "./contexts/orderState";
 import { useHistory} from "react-router-dom";
+import orderContext from "./contexts/orderContext"
 
 const Subtotal = () => {
   const history = useHistory()
-  const [{ basket}] = useStateValue();
+  const  { orders } = useContext(orderContext)
   return (
     <div className="subtotal">
       <CurrencyFormat
         renderText={(value) => (
           <>
             <p>
-              {/* Part of the homework */}
-              Subtotal ({basket.length} items): <strong>{value}</strong>
+              Subtotal ({orders.length} items): <strong>{value}</strong>
             </p>
             <small className="subtotal__gift">
               <input type="checkbox" /> This order contains a gift
@@ -23,7 +22,7 @@ const Subtotal = () => {
           </>
         )}
         decimalScale={2}
-        value={getBasketTotal(basket)} // Part of the homework
+        value={getBasketTotal(orders)}
         displayType={"text"}
         thousandSeparator={true}
         prefix={"₹"}

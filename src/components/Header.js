@@ -1,18 +1,27 @@
-import React from 'react'
+import React,{useContext,useEffect} from 'react'
 import "./css/header.css"
 import SearchIcon from '@mui/icons-material/Search';
 import { ShoppingBasket } from '@mui/icons-material';
 import { Link } from "react-router-dom";
-import { useStateValue } from "./context/StateProvider";
-import { auth } from "../firebase";
+import { useHistory } from "react-router";
+import orderContext from "./contexts/orderContext"
 
 const Header = () => {
-    const [{ basket,user}] = useStateValue();
+    const history=useHistory()
+    const  { orders,log,setlog,getOrders } = useContext(orderContext)
+
+    useEffect(() => {
+        if(localStorage.getItem('token')){
+            getOrders()
+        }
+        // eslint-disable-next-line
+    }, [])
 
     const handleAuthenticaton = () => {
-        if (user) {
-          auth.signOut();
-        }
+        localStorage.removeItem('token');
+        localStorage.removeItem('email');
+        setlog(false)
+        history.push('/')
       }
     return (
         <div className = "header">
@@ -26,10 +35,10 @@ const Header = () => {
 
 
             <div className="header_nav">
-                <Link to='/login'>
-                    <div onClick={handleAuthenticaton} className="header_option">
-                        <span className="header_option1">Hello {!user ? 'Guest' : user.email}</span>
-                        <span className="header_option2">{user ? 'Sign Out' : 'Sign In'}</span>
+                <Link to={log?'/':'/login'}>
+                    <div className="header_option">
+                        <span className="header_option1">Hello {!localStorage.getItem('email') ? 'Guest' : localStorage.getItem('email')}</span>
+                        <span className="header_option2" onClick={handleAuthenticaton}>{log?"Sign Out":"Sign In"}</span>
                     </div>
                 </Link>
                 {/* {!user && '/orders'} */}
@@ -45,7 +54,7 @@ const Header = () => {
                 </div>
                 <Link to ="checkout"><div className="header_optionBasket">
                     <ShoppingBasket></ShoppingBasket>
-                    <span className="header_option2 header_basketCount">{basket?.length}</span>
+                    <span className="header_option2 header_basketCount">{log? orders?.length:0}</span>
                 </div></Link>
             </div>
         </div>

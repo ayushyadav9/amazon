@@ -1,11 +1,12 @@
-import React from "react";
+import React,{useContext} from "react";
 import "./css/checkout.css";
 import Subtotal from "./Subtotal";
-import { useStateValue } from "./context/StateProvider";
 import CheckoutProduct from "./CheckoutProduct";
+import orderContext from "./contexts/orderContext"
 
 const Checkout = () => {
-    const [{ basket,user}] = useStateValue();
+    const { orders } = useContext(orderContext)
+  
   return (
     <div className="checkout">
       <div className="checkout__left">
@@ -16,13 +17,13 @@ const Checkout = () => {
         />
 
         <div>
-          <h3>Hello, {user?user.email:'Guest'}</h3>
+          <h3>Hello, {localStorage.getItem("email")? localStorage.getItem("email"):'Guest'}</h3>
           <h2 className="checkout__title">Your shopping Basket</h2>
 
-          {basket.map((item,i) => (
+          {orders.map((item,i) => (
             <CheckoutProduct
               key = {i}
-              id={item.id}
+              id={item._id}
               title={item.title}
               image={item.image}
               price={item.price}

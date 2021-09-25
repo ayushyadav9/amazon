@@ -11,6 +11,7 @@ import Payment from "./components/Payment";
 import { loadStripe } from "@stripe/stripe-js"
 import { Elements } from "@stripe/react-stripe-js"
 import Orders from "./components/Orders";
+import OrderState from "./components/contexts/orderState";
 // import CartOverlay from "./components/CartOverlay";
 
 const promise = loadStripe("pk_test_51JcuAuSBnBY4ApEvzxjfRGA27ObuexQvqHGGVXCYMOdK9JY7hwcjOytg2hXG1EgdHSD9spCNvpZNgQx9gTxgyToT00133LCV9M");
@@ -39,6 +40,7 @@ function App() {
   }, []);
 
   return (
+    <OrderState>
     <Router>
       <div className="App">
         <Header></Header>
@@ -64,6 +66,7 @@ function App() {
         </Switch>
       </div>
     </Router>
+    </OrderState>
   );
 }
 

@@ -1,18 +1,16 @@
-import React,{ useState, useEffect } from 'react'
+import React,{ useState,useContext,useEffect } from 'react'
 import "./css/payment.css";
-import { useStateValue } from "./context/StateProvider";
 import { Link,useHistory} from "react-router-dom";
 import { getBasketTotal } from "./context/reducer";
 import CheckoutProduct from "./CheckoutProduct";
 import {  useElements, CardElement, useStripe } from "@stripe/react-stripe-js"
 import CurrencyFormat from "react-currency-format";
-import axios from "../axios";
-import { db } from "../firebase";
+import orderContext from "./contexts/orderContext"
 
 
 
 const Payment = () => {
-    const [{ basket,user},dispatch] = useStateValue();
+    const  { orders,addBOrder } = useContext(orderContext)
 
     const stripe = useStripe();
     const elements = useElements();
@@ -25,46 +23,54 @@ const Payment = () => {
 
     const history = useHistory();
 
-    useEffect(() => {
-        const getClientSecteret = async () => {
-            const response = await axios({
-                method: 'post',
-                url: `/payments/create?total=${getBasketTotal(basket) * 100}`
-            });
-            setClientSecret(response.data.clientSecret)
-        }
-        getClientSecteret();
-    }, [basket])
+    // useEffect(() => {
+    //     const getClientSecteret = async () => {
+    //         const response = await fetch(`http://localhost:5000/api/bought/payments/create?total=${getBasketTotal(orders) * 100}`, {
+    //             method: "POST",
+    //             headers: {
+    //               "Content-Type": "application/json",
+    //               "auth-token": localStorage.getItem('token')
+    //             },
+    //           });
+    //         setClientSecret(response.data.clientSecret)
+    //     }
+    //     getClientSecteret();
+    // }, [orders])
 
 
     const handleSubmit = async (e)=> {
         e.preventDefault();
         setProcessing(true);
-        const payload = await stripe.confirmCardPayment(clientSecret, {
-            payment_method: {
-                card: elements.getElement(CardElement)
-            }
-        }).then(({ paymentIntent }) => {
+        // const payload = await stripe.confirmCardPayment(clientSecret, {
+        //     payment_method: {
+        //         card: elements.getElement(CardElement)
+        //     }
+        // }).then(({ paymentIntent }) => {
 
-            db.collection("users")
-                .doc(user?.uid)
-                .collection("orders")
-                .doc(paymentIntent.id)
-                .set({
-                    basket: basket,
-                    amount: paymentIntent.amount,
-                    created: paymentIntent.created
+            // db.collection("users")
+            //     .doc(user?.uid)
+            //     .collection("orders")
+            //     .doc(paymentIntent.id)
+            //     .set({
+            //         basket: basket,
+            //         amount: paymentIntent.amount,
+            //         created: paymentIntent.created
+            //     })
+            const  item = []
+            for(let i=0;i<orders.length;i++){
+                item.push({
+                    title: orders[i].title,
+                    price: orders[i].price,
+                    rating: orders[i].rating,
+                    image: orders[i].image
                 })
-
+            }
+            addBOrder(item);
             setSucceeded(true);
             setError(null);
             setProcessing(false);
-
-            dispatch({
-                type: 'EMPTY_BASKET',
-            })
             history.replace("/orders");
-        })
+        // })
 
 
     }
@@ -75,14 +81,14 @@ const Payment = () => {
     return (
              <div className="payment">
             <div className="payment__container">
-                <h1>Checkout (<Link to="/checkout">{basket?.length} items</Link>)</h1>
+                <h1>Checkout (<Link to="/checkout">{orders?.length} items</Link>)</h1>
                 <div className="payment__section">
                     <div className="payment__title">
                         <h3>Deliver Address</h3>
                     </div>
 
                     <div className="payment__address">
-                        <p>{user?.email}</p>
+                        <p>Ayush</p>
                         <p>123 React Lane</p>
                         <p>Los Angeles ,CA</p>
                     </div>
@@ -93,14 +99,14 @@ const Payment = () => {
                         <h3>Review items and delivery</h3>
                     </div>
                     <div className="payment__items">
-                        {basket.map(item => (
+                        {orders.map(item => (
                             <CheckoutProduct
                                 id={item.id}
                                 title={item.title}
                                 image={item.image}
                                 price={item.price}
                                 rating={item.rating}
-
+                                hideButton={true}
                             />
                         ))}
                     </div>
@@ -125,7 +131,7 @@ const Payment = () => {
                                         </>
                                     )}
                                     decimalScale={2}
-                                    value={getBasketTotal(basket)}
+                                    value={getBasketTotal(orders)}
                                     displayType={"text"}
                                     thousandSeparator={true}
                                     prefix={"₹ "}
